@@ -337,8 +337,14 @@ def pars():
 
                 }
                     
-
-            r = s.get(url,  params = get_params, headers=headers, proxies=proxies, verify=False)
+            try:
+                r = s.get(url,  params = get_params, headers=headers, proxies=proxies, verify=False)
+            except Exception as err:
+                exceptn = str(err)
+                print(exceptn)
+                input('\nERROR!!!')
+                continue
+           
             data = json.loads(r.text)
             cookies=dict(r.cookies)
             res = [(k, v) for k, v in cookies.items()]
