@@ -1,5 +1,4 @@
 import json
-import subprocess
 import random
 import time
 import csv
@@ -36,10 +35,11 @@ counterLook = 0
 isspam = False
 counterSpam = 0
 XInstagramAJAX = csrftoken = ds_user_id = sessionid = ig_did = mid = ig_nrcb = shbid = shbts = rur = XIGWWWClaim = False
-XIGAppID = "936619743392459"
+XIGAppID = "1217981644879628"
 print('IGAppid for your version is: '+XIGAppID)
 likable = False
 photocode = False
+useragent = "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
 
 if os.path.isfile('login.txt'):
     logins={}
@@ -162,7 +162,7 @@ def sessionData():
 #Cookie and headers req.
     with requests.Session() as s:
         r = s.get(link, headers={
-            "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1",
+            "User-Agent": useragent,
             "X-Requested-With": "XMLHttpRequest",
             "Referer": "https://www.instagram.com/accounts/login/"}, proxies=proxies, verify=False)
         csrf = re.findall(r"csrf_token\":\"(.*?)\"",r.text)[0]
@@ -174,7 +174,7 @@ def sessionData():
 
 
         r = s.post(login_url,data=payload,headers={
-            "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1",
+            "User-Agent": useragent,
             "X-Requested-With": "XMLHttpRequest",
             "Referer": "https://www.instagram.com/accounts/login/",
             "X-IG-WWW-Claim":'0',
@@ -214,7 +214,7 @@ def getcoo():
         'Content-Type': 'application/x-www-form-urlencoded',
         'Upgrade-Insecure-Requests': '1',
         'Accept': '*/*',
-        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1',
+        'User-Agent': useragent,
         'X-ASBD-ID': '198387',
         ###
         'Origin': 'https://www.instagram.com',
@@ -250,7 +250,7 @@ def actions():
         'Accept': '*/*',
         'X-IG-WWW-Claim':XIGWWWClaim,
         'X-ASBD-ID': '198387',
-        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Mobile/15E148 Safari/604.1',
+        'User-Agent': useragent,
         'X-IG-App-ID': XIGAppID,
         'Origin': 'https://www.instagram.com',
         'Sec-Fetch-Site': 'same-site',
@@ -289,7 +289,7 @@ def actions():
             'X-Instagram-AJAX': XInstagramAJAX,
             'Content-Type': 'application/x-www-form-urlencoded',
             'Accept': '*/*',
-            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Mobile/15E148 Safari/604.1',
+            'User-Agent': useragent,
             'X-ASBD-ID': '198387',
             'X-CSRFToken': csrftoken,
             'X-IG-App-ID': XIGAppID,
@@ -336,7 +336,7 @@ def actions():
             'X-Instagram-AJAX': XInstagramAJAX,
             'Content-Type': 'application/x-www-form-urlencoded',
             'Accept': '*/*',
-            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Mobile/15E148 Safari/604.1',
+            'User-Agent': useragent,
             'X-ASBD-ID': '198387',
             'X-CSRFToken': csrftoken,
             'X-IG-App-ID': XIGAppID,
@@ -372,7 +372,7 @@ def actions():
         headers={
                 'Host': 'www.instagram.com',
                 'Connection': 'keep-alive',
-                'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Mobile/15E148 Safari/604.1',
+                'User-Agent': useragent,
                 'Accept': '*/*',
                 'Sec-Fetch-Site': 'same-site',
                 'Sec-Fetch-Mode': 'cors',
@@ -412,7 +412,7 @@ def checkuser(username):
         'X-IG-WWW-Claim': XIGWWWClaim,
         'X-Requested-With': 'XMLHttpRequest',
         'X-ASBD-ID': '198387',
-        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1',
+        'User-Agent': useragent,
         'X-IG-App-ID': XIGAppID,
         'Sec-Fetch-Site': 'same-origin',
         'Sec-Fetch-Mode': 'cors',
@@ -523,7 +523,7 @@ def sendlike(media_id):
                     'Accept': '*/*',
                     'X-Requested-With': 'XMLHttpRequest',
                     'X-ASBD-ID': '198387',
-                    'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1',
+                    'User-Agent': useragent,
                     'X-CSRFToken': csrftoken,
                     'X-IG-App-ID': XIGAppID,
                     'Origin': 'https://www.instagram.com',
@@ -641,7 +641,7 @@ def photoload(imagefile):
                             'X-Instagram-Rupload-Params': f'{{"media_type":1,"upload_id":{microtime},"upload_media_height":{imheight},"upload_media_width":{imwidth}}}',
                             'X-ASBD-ID': '198387',
                             'X-Entity-Length': lengh,
-                            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Mobile/15E148 Safari/604.1',
+                            'User-Agent': useragent,
                             'Origin': 'https://www.instagram.com',
                             'Sec-Fetch-Site': 'same-site',
                             'Sec-Fetch-Mode': 'cors',
@@ -673,7 +673,7 @@ def photoload(imagefile):
         'X-Instagram-AJAX': XInstagramAJAX,
         'Content-Type': 'application/x-www-form-urlencoded',
         'Accept': '*/*',
-        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Mobile/15E148 Safari/604.1',
+        'User-Agent': useragent,
         'X-ASBD-ID': '198387',
         'X-CSRFToken': csrftoken,
         'Origin': 'https://www.instagram.com',
