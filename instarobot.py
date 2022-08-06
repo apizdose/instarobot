@@ -401,7 +401,7 @@ def checkuser(username):
     media_id=''
     global likable
     likable = False
-    link = f'https://www.instagram.com/{username}/?__a=1'
+    link = f'https://www.instagram.com/{username}/?__a=1&__d=dis'
     with requests.Session() as s:
 
       headers = {
