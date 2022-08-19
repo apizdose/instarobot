@@ -527,7 +527,9 @@ def runpost():
             except Exception as ex:
                 print('ERROR!!! ERROR!!! ERROR!!! ERROR!!! ERROR!!!')
                 print(ex)
-                break
+                identme()
+                input("Press enter to continue:")
+                continue
                 
             destination_path = "Trash"
             new_location = shutil.move(file, destination_path)
