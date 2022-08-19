@@ -8,6 +8,9 @@ from PIL import Image
 import glob
 import shutil
 from os import path
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 print('''Hello. I am a instagram bot, who uploading random photo across your accounts list round robin.
 Now if I don't find, im create two folders. Plz put the photos in "album" folder.
@@ -21,6 +24,18 @@ Note! Fill up the directory "album" before starting.
 __________________________________________________________________________
 ''')
 
+proxy=''
+
+with open('proxy.txt','r') as text:
+    proxy=text.read()
+proxies={"http":f"http://{proxy}",
+         "https":f"https://{proxy}"}
+def identme():
+    with requests.Session() as s:
+        r=s.get('https://ident.me', proxies=proxies, verify=False)
+        print(r.text)
+identme() 
+
 if not os.path.isdir('album'):
     os.mkdir('album')
     print('Directory album created, put you images here!')
@@ -33,8 +48,8 @@ passwordform=input('Password:  ') or ""
 ####Here your logins and passwords.#####
 ########################################
 
-frfrom=input('Frequency from (seconds):  ') or "80000"
-frto=input('Frequency to (seconds):  ') or "86000"
+frfrom=input('Frequency from (seconds):  ') or "50000"
+frto=input('Frequency to (seconds):  ') or "66000"
 frfrom=int(frfrom)
 frto=int(frto)
 
@@ -43,6 +58,7 @@ XInstagramAJAX = csrftoken = ds_user_id = sessionid = ig_did = mid = ig_nrcb = s
 XIGAppID = input('Paste XIGAppID or press enter to default: ') or "1217981644879628"
 print('IGAppid for your version is: '+XIGAppID)
 useragent = "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+
 
 printtags='''
 '''
@@ -115,6 +131,18 @@ def jpeg_res(filename):
 def tspose(filename):
     im = Image.open(filename)
     im = im.transpose(Image.FLIP_LEFT_RIGHT)
+    pix = [(pixel[0], pixel[1], pixel[2]) for pixel in im.getdata()]
+    for i in range(10):
+        red = random.randint(0,255)
+        green = random.randint(0,255)
+        blue = random.randint(0,255) 
+
+        ran=random.randint(10,(len(pix) - 10))
+
+        pix[ran] = (red, green, blue)
+
+    im.putdata(pix)
+    #im = im.filter(ImageFilter.GaussianBlur(3))
     im.save(filename)
     
 #Open session
@@ -138,7 +166,7 @@ def sessionData():
         r = s.get(link, headers={
             "User-Agent": useragent,
             "X-Requested-With": "XMLHttpRequest",
-            "Referer": "https://www.instagram.com/accounts/login/"})
+            "Referer": "https://www.instagram.com/accounts/login/"},proxies=proxies, verify=False)
         csrf = re.findall(r"csrf_token\":\"(.*?)\"",r.text)[0]
         globals()['XInstagramAJAX'] = re.findall(r"rollout_hash\":\"(.*?)\"",r.text)[0]
         coo = dict(r.cookies)
@@ -153,7 +181,7 @@ def sessionData():
             "Referer": "https://www.instagram.com/accounts/login/",
             "X-IG-WWW-Claim":'0',
             "x-csrftoken":csrf
-        })
+        },proxies=proxies, verify=False)
         global XIGWWWClaim
         XIGWWWClaim = r.headers['x-ig-set-www-claim']
         
@@ -202,7 +230,7 @@ def getcoo():
    
 
     with requests.Session() as s:
-        r = s.get('https://www.instagram.com/accounts/onetap/?next=%2F', headers=headers)
+        r = s.get('https://www.instagram.com/accounts/onetap/?next=%2F', headers=headers,proxies=proxies, verify=False)
         print('Cookies catched.')
         print(r.status_code)
         #print('GET COOK')
@@ -236,7 +264,7 @@ def actions():
 
     with requests.Session() as s:
         
-        r = s.get('https://i.instagram.com/api/v1/feed/reels_tray/', headers=headers)
+        r = s.get('https://i.instagram.com/api/v1/feed/reels_tray/', headers=headers,proxies=proxies, verify=False)
         print('Cookies catched.')
         print('Reels_tray code: '+str(r.status_code))
         
@@ -283,7 +311,7 @@ def actions():
 
         }
 
-        r = s.post('https://i.instagram.com/api/v1/feed/timeline/', data=body, headers=headers)
+        r = s.post('https://i.instagram.com/api/v1/feed/timeline/', data=body, headers=headers,proxies=proxies, verify=False)
         print('timeline catched.')
         cookies=dict(r.cookies)
         print(cookies)
@@ -326,7 +354,7 @@ def actions():
 
         }
 
-        r = s.post('https://i.instagram.com/api/v1/notifications/badge/', data=body, headers=headers)
+        r = s.post('https://i.instagram.com/api/v1/notifications/badge/', data=body, headers=headers,proxies=proxies, verify=False)
         cookies=dict(r.cookies)
         print(cookies)
         res = [(k, v) for k, v in cookies.items()]
@@ -355,7 +383,7 @@ def actions():
 
 
 
-        r = s.get('https://www.instagram.com/data/manifest.json', headers=headers)
+        r = s.get('https://www.instagram.com/data/manifest.json', headers=headers,proxies=proxies, verify=False)
 
         print('MAINFEST catched.')
         print('MAINFEST code: '+str(r.status_code))
@@ -403,7 +431,7 @@ def photoload(imagefile):
                             "Cookie": f'mid={mid}; ig_did={ig_did}; shbid={shbid}; shbts={shbts}; rur={rur}; csrftoken={csrftoken}; ds_user_id={ds_user_id}; sessionid={sessionid}',
                         }
 
-        r = s.post(f'https://www.instagram.com/rupload_igphoto/fb_uploader_{microtime}', data=open(imagefile, "rb"), headers=headers)
+        r = s.post(f'https://www.instagram.com/rupload_igphoto/fb_uploader_{microtime}', data=open(imagefile, "rb"), headers=headers,proxies=proxies, verify=False)
         print('\n\n'+str(r.status_code))
         print(r.text)
         print('\nWaiting a few seconds...')
@@ -458,7 +486,7 @@ def photoload(imagefile):
             
             }
 
-        r = s.post('https://www.instagram.com/create/configure/', data=sbody, headers=sheaders)
+        r = s.post('https://www.instagram.com/create/configure/', data=sbody, headers=sheaders, proxies=proxies, verify=False)
 
         print('\n\n'+str(r.status_code))
         print(sbody)
